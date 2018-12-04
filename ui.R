@@ -20,11 +20,11 @@ data <- fromJSON(body)
 shinyUI(fluidPage(
   
   # Application title
-  titlePanel("Fantasy Basketball"),
+  titlePanel("Fantasy Basketball Trading Comparison Tool"),
   fluidRow(
     column(3, radioButtons(
       inputId = "mode",
-      label = "mode:",
+      label = "Mode:",
       choices = list("Totals", "Averages"), 
       inline = TRUE
     )),
