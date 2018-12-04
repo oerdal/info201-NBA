@@ -53,7 +53,7 @@ shinyServer(function(input, output) {
         }
       }
     }
-    colnames(data_update) <- c("Name", "Team", "POS", "Rate", "Draft", 
+    colnames(data_update) <- c("Name", "Team", "POS", "Rating", "Draft", 
                                "GP", "MIN", "FG%", "FT%", "3PM", "REB", "AST", 
                                "STL", "BLK", "PTS", "TOV", "+/-")
     data_update
