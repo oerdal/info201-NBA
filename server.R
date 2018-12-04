@@ -59,16 +59,16 @@ shinyServer(function(input, output) {
     data_update
   })
   
-  output$team1 = renderPrint({
-    players = input$stats_rows_selected
+  output$team1 <- renderPrint({
+    players <- input$stats_rows_selected
     if (length(players)) {
       cat('Team 1\n\nThese players are selected for trading:\n\n')
       cat(players, sep = '\n')
     }
   })
   
-  output$team2 = renderPrint({
-    players = input$stats_rows_selected
+  output$team2 <- renderPrint({
+    players <- input$stats_rows_selected
     if (length(players)) {
       cat('Team 2\n\nThese players are selected for trading:\n\n')
       cat(players, sep = '\n')
