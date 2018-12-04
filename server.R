@@ -56,7 +56,8 @@ shinyServer(function(input, output) {
     colnames(data_update) <- c("Name", "Team", "POS", "Rating", "GP", "MIN", 
                                "FG%", "FT%", "3PM", "REB", "AST", 
                                "STL", "BLK", "PTS", "TOV", "+/-")
-    data_update
+    DT::datatable(data_update, options = list(lengthMenu = c(25, 50, 75, 100), 
+                                              pageLength = 25))
   })
   
   output$team1 <- renderPrint({
