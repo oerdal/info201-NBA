@@ -10,17 +10,12 @@ library(dplyr)
 library(jsonlite)
 library(DT)
 
+#reads in data
 url <- paste0("https://api.fantasydata.net/v3/nba/stats/JSON/PlayerSeasonStats/2019")
 response <- GET(url, add_headers("Host" = "api.fantasydata.net",
                                  "Ocp-Apim-Subscription-Key" = "ddc32a9a9ec54d5a87e5d0d44a36fd20"))
 body <- content(response, "text")
 data <- fromJSON(body)
-categories <- c("Name", "Team", "Position", "FantasyPoints", "FantasyPointsFantasyDraft", 
-                "Games", "Minutes", "FieldGoalsPercentage", "FreeThrowsPercentage", 
-                "ThreePointersMade", "Rebounds", "Assists", "Steals", "BlockedShots", "Points", 
-                "Turnovers", "PlusMinus")
-data_nba <- select(data, categories)
-
 
 # Define UI for application that draws a histogram
 shinyUI(fluidPage(
@@ -37,13 +32,13 @@ shinyUI(fluidPage(
     column(2, selectInput(
       inputId = "team", 
       label = "Team:", 
-      choices = unique(c("All", data_nba$Team))
+      choices = unique(c("All", data$Team))
     )),
     column(4, checkboxGroupInput(
       inputId = "position", 
       label = "Positions:", 
-      choices = unique(c(data_nba$Position)), 
-      selected = unique(c(data_nba$Position)),
+      choices = unique(c(data$Position)), 
+      selected = unique(c(data$Position)),
       inline = TRUE
     )),
     column(1, actionButton(
@@ -58,11 +53,16 @@ shinyUI(fluidPage(
   ),
   
   hr(),
+  # shows players user clicked for trading comparison
   fluidRow(
-    column(12, DT::dataTableOutput("stats"))
+    column(6, verbatimTextOutput("team1")),
+    column(6, verbatimTextOutput("team2"))
   ),
   
   hr(),
-  plotOutput("plot"),
-  textOutput("text")
+  # plot for trading comparison
+  fluidRow(
+    column(12, DT::dataTableOutput("stats"))
+  )
+  
 ))

@@ -9,6 +9,24 @@ library(jsonlite)
 library(eeptools)
 library(shiny)
 
+# reads in data
+url <- paste0("https://api.fantasydata.net/v3/nba/stats/JSON/PlayerSeasonStats/2019")
+response <- GET(url, add_headers("Host" = "api.fantasydata.net",
+                                 "Ocp-Apim-Subscription-Key" = "ddc32a9a9ec54d5a87e5d0d44a36fd20"))
+body <- content(response, "text")
+data <- fromJSON(body)
+categories <- c("Name", "Team", "Position", "FantasyPoints", "FantasyPointsFantasyDraft", 
+                "Games", "Minutes", "FieldGoalsPercentage", "FreeThrowsPercentage", 
+                "ThreePointersMade", "Rebounds", "Assists", "Steals", "BlockedShots", "Points", 
+                "Turnovers", "PlusMinus")
+data_nba <- select(data, categories)
+for (i in 1:nrow(data_nba)) {
+  data_nba[i, "FieldGoalsPercentage"] <- ifelse(data_nba[i, "FieldGoalsPercentage"] > 100, 
+                                                100, data_nba[i, "FieldGoalsPercentage"])
+  data_nba[i, "FreeThrowsPercentage"] <- ifelse(data_nba[i, "FreeThrowsPercentage"] > 100, 
+                                                100, data_nba[i, "FreeThrowsPercentage"])
+}
+
 # returns the stats of a given player
 get_stats <- function(player) {
   names <- c(tolower(data_nba$Name))
@@ -39,6 +57,14 @@ shinyServer(function(input, output) {
                                "GP", "MIN", "FG%", "FT%", "3PM", "REB", "AST", 
                                "STL", "BLK", "PTS", "TOV", "+/-")
     data_update
+  })
+  
+  output$team1 = renderPrint({
+    players = input$stats_rows_selected
+    if (length(players)) {
+      cat('These players were selected:\n\n')
+      cat(players, sep = '\n')
+    }
   })
   
 })
