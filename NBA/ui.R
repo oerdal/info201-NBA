@@ -1,4 +1,9 @@
 # install.packages("shiny")
+# install.packages("DT")
+# install.packages("httr")
+# install.packages("dplyr")
+# install.packages("jsonlite")
+# install.packages("eeptools")
 library(shiny)
 library(httr)
 library(dplyr)
@@ -41,21 +46,23 @@ shinyUI(fluidPage(
       selected = unique(c(data_nba$Position)),
       inline = TRUE
     )),
-    column(1, submitButton(
-      text = "Trade", 
+    column(1, actionButton(
+      inputId = "trade",
+      label = "Trade", 
       icon("basketball-ball")
+    )),
+    column(1, actionButton(
+      inputId = "reset",
+      label = "Reset"
     ))
   ),
   
   hr(),
-  
   fluidRow(
     column(12, DT::dataTableOutput("stats"))
   ),
   
   hr(),
-  
-  fluidRow(
-    column(12, plotOutput("plot"))
-  )
+  plotOutput("plot"),
+  textOutput("text")
 ))
