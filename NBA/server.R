@@ -37,7 +37,7 @@ shinyServer(function(input, output) {
    
   output$stats <- DT::renderDataTable({
     data_update <- filter(data_nba, Position %in% input$position)
-    if (input$team != "ALL") {
+    if (input$team != "All") {
       data_update <- filter(data_update, Team == input$team)
     }
     if (input$mode == "Averages") {
