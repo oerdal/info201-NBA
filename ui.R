@@ -18,9 +18,15 @@ data <- fromJSON(body)
 
 # Define UI for application that draws a histogram
 shinyUI(fluidPage(
+
+  tags$head(
+    tags$style(
+      ".title {text-align: center}"
+    )
+  ),
+  tags$div(class = "title", titlePanel("Fantasy Basketball Trading Comparison Tool")),
+  hr(),
   
-  # Application title
-  titlePanel("Fantasy Basketball Trading Comparison Tool"),
   fluidRow(
     column(3, radioButtons(
       inputId = "mode",
