@@ -15,11 +15,7 @@ categories <- c("Name", "Team", "Position", "FantasyPoints", "FantasyPointsFanta
                 "ThreePointersMade", "Rebounds", "Assists", "Steals", "BlockedShots", "Points", 
                 "Turnovers", "PlusMinus")
 data_nba <- select(data, categories)
-for (i in 1:nrow(data_nba)) {
-  for (j in 10:17) {
-    data_nba[i, j] <- round(data_nba[i, j] / data_nba[i, "Games"], 2)
-  }
-}
+
 
 # Define UI for application that draws a histogram
 shinyUI(fluidPage(
