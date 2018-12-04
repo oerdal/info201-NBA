@@ -1,16 +1,15 @@
 # install.packages("shiny")
-# install.packages("DT")
 # install.packages("httr")
 # install.packages("dplyr")
 # install.packages("jsonlite")
-# install.packages("eeptools")
+# install.packages("DT")
 library(shiny)
 library(httr)
 library(dplyr)
 library(jsonlite)
 library(DT)
 
-#reads in data
+# reads in data
 url <- paste0("https://api.fantasydata.net/v3/nba/stats/JSON/PlayerSeasonStats/2019")
 response <- GET(url, add_headers("Host" = "api.fantasydata.net",
                                  "Ocp-Apim-Subscription-Key" = "ddc32a9a9ec54d5a87e5d0d44a36fd20"))
