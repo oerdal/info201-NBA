@@ -1,0 +1,55 @@
+# install.packages("shiny")
+library(shiny)
+library(httr)
+library(dplyr)
+library(jsonlite)
+library(DT)
+
+url <- paste0("https://api.fantasydata.net/v3/nba/stats/JSON/PlayerSeasonStats/2019")
+response <- GET(url, add_headers("Host" = "api.fantasydata.net",
+                                 "Ocp-Apim-Subscription-Key" = "ddc32a9a9ec54d5a87e5d0d44a36fd20"))
+body <- content(response, "text")
+data <- fromJSON(body)
+categories <- c("Name", "Team", "Position", "FantasyPoints", "FantasyPointsFantasyDraft", 
+                "Games", "Minutes", "FieldGoalsPercentage", "FreeThrowsPercentage", 
+                "ThreePointersMade", "Rebounds", "Assists", "Steals", "BlockedShots", "Points", 
+                "Turnovers", "PlusMinus")
+data_nba <- select(data, categories)
+for (i in 1:nrow(data_nba)) {
+  for (j in 10:17) {
+    data_nba[i, j] <- round(data_nba[i, j] / data_nba[i, "Games"], 2)
+  }
+}
+
+# Define UI for application that draws a histogram
+shinyUI(fluidPage(
+  
+  # Application title
+  titlePanel("Fantasy Basketball"),
+  fluidRow(
+    column(3, radioButtons(
+      inputId = "mode",
+      label = "mode:",
+      choices = list("Totals", "Averages"), 
+      inline = TRUE
+    )),
+    column(4, selectInput(
+      inputId = "team", 
+      label = "Team:", 
+      choices = unique(c("All", data_nba$Team))
+    )),
+    column(5, checkboxGroupInput(
+      inputId = "position", 
+      label = "Positions:", 
+      choices = unique(c(data_nba$Position)), 
+      selected = unique(c(data_nba$Position)),
+      inline = TRUE
+    ))
+  ),
+  
+  hr(),
+  
+  fluidRow(
+    column(12, DT::dataTableOutput("stats"))
+  )
+))
