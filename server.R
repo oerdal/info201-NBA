@@ -41,8 +41,4 @@ shinyServer(function(input, output) {
     data_update
   })
   
-  output$plot <- renderPlot({
-    output$text <- renderText({})
-  })
-  
 })
