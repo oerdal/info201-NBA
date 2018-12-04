@@ -29,17 +29,21 @@ shinyUI(fluidPage(
       choices = list("Totals", "Averages"), 
       inline = TRUE
     )),
-    column(4, selectInput(
+    column(2, selectInput(
       inputId = "team", 
       label = "Team:", 
       choices = unique(c("All", data_nba$Team))
     )),
-    column(5, checkboxGroupInput(
+    column(4, checkboxGroupInput(
       inputId = "position", 
       label = "Positions:", 
       choices = unique(c(data_nba$Position)), 
       selected = unique(c(data_nba$Position)),
       inline = TRUE
+    )),
+    column(1, submitButton(
+      text = "Trade", 
+      icon("basketball-ball")
     ))
   ),
   
@@ -47,5 +51,11 @@ shinyUI(fluidPage(
   
   fluidRow(
     column(12, DT::dataTableOutput("stats"))
+  ),
+  
+  hr(),
+  
+  fluidRow(
+    column(12, plotOutput("plot"))
   )
 ))
