@@ -98,11 +98,7 @@ shinyServer(function(input, output) {
   })
   
   output$stats1 <- DT::renderDataTable({
-    data_update <- filter(data_nba, Position %in% input$t_position)
-    if (input$t_team != "All") {
-      data_update <- filter(data_update, Team == input$t_team)
-    }
-    
+    data_update <- data_nba
     colnames(data_update) <- c("Name", "Team", "POS", "Rating", "GP", "MIN", 
                                "FG%", "FT%", "3PM", "REB", "AST", 
                                "STL", "BLK", "PTS", "TOV", "+/-")
@@ -112,11 +108,7 @@ shinyServer(function(input, output) {
   })
   
   output$stats2 <- DT::renderDataTable({
-    data_update <- filter(data_nba, Position %in% input$t_position)
-    if (input$t_team != "All") {
-      data_update <- filter(data_update, Team == input$t_team)
-    }
-    
+    data_update <- data_nba
     colnames(data_update) <- c("Name", "Team", "POS", "Rating", "GP", "MIN", 
                                "FG%", "FT%", "3PM", "REB", "AST", 
                                "STL", "BLK", "PTS", "TOV", "+/-")
@@ -130,10 +122,7 @@ shinyServer(function(input, output) {
   
   output$team1 <- renderPrint({
     players <- input$stats1_rows_selected
-    data_update <- filter(data_nba, Position %in% input$t_position)
-    if (input$t_team != "All") {
-      data_update <- filter(data_update, Team == input$t_team)
-    }
+    data_update <- data_nba
     selected <- data_update[players, "Name"]
     cat('Team 1\n\n')
     if (length(selected) > 0) {
@@ -146,10 +135,7 @@ shinyServer(function(input, output) {
   
   output$team2 <- renderPrint({
     players <- input$stats2_rows_selected
-    data_update <- filter(data_nba, Position %in% input$t_position)
-    if (input$t_team != "All") {
-      data_update <- filter(data_update, Team == input$t_team)
-    }
+    data_update <- data_nba
     selected <- data_update[players, "Name"]
     cat('Team 2\n\n')
     if (length(selected) > 0) {
@@ -162,10 +148,7 @@ shinyServer(function(input, output) {
   
   output$trade_plot <- renderPlot({
     players <- input$stats1_rows_selected
-    data_update <- filter(data_nba, Position %in% input$t_position)
-    if (input$t_team != "All") {
-      data_update <- filter(data_update, Team == input$t_team)
-    }
+    data_update <- data_nba
     
     selected1 <- data_update[input$stats1_rows_selected,]
     selected2 <- data_update[input$stats2_rows_selected,]

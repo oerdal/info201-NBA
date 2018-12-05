@@ -32,17 +32,17 @@ shinyUI(fluidPage(
        hr(),
        
        fluidRow(
-         column(4, selectInput(
-           inputId = "d_team", 
-           label = "Team:", 
-           choices = unique(c("All", data$Team))
-         ), align = "center"),
          column(4, radioButtons(
            inputId = "d_mode",
            label = "Mode:",
            choices = list("Totals", "Averages"),
            selected = "Averages", 
            inline = TRUE
+         ), align = "center"),
+         column(4, selectInput(
+           inputId = "d_team", 
+           label = "Team:", 
+           choices = unique(c("All", data$Team))
          ), align = "center"),
          column(4, checkboxGroupInput(
            inputId = "d_position", 
@@ -75,30 +75,18 @@ shinyUI(fluidPage(
        column(6, plotOutput("trade_plot")),
        column(3, verbatimTextOutput("team2"))
       ),
+      
+      hr(),
       fluidRow(
-        column(12, textOutput("message"), align = "center")
+        column(6, textOutput("message"), align = "center"),
+        column(6, actionButton(
+          inputId = "t_reset",
+          label = "Reset",
+          icon("redo")
+        ), align = "center")
       ),
       
       hr(),
-      
-      fluidRow(
-        column(4, selectInput(
-          inputId = "t_team", 
-          label = "Team:", 
-          choices = unique(c("All", data$Team))
-        ), align = "center"),
-        column(4, actionButton(
-          inputId = "t_reset",
-          label = "Reset"
-        ), align = "center"),
-        column(4, checkboxGroupInput(
-          inputId = "t_position", 
-          label = "Positions:", 
-          choices = unique(c(data$Position)), 
-          selected = unique(c(data$Position)),
-          inline = TRUE
-        ), align = "center")
-      ),
       
       # plot for trading comparison             
       fluidRow(
