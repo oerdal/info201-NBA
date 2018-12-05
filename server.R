@@ -44,11 +44,11 @@ calculate_trade <- function(players) {
   colnames(players) <- c("Name", "Team", "POS", "Rating", "GP", "MIN", 
                            "FG%", "FT%", "3PM", "REB", "AST", 
                            "STL", "BLK", "PTS", "TOV", "+/-")
-  col_names <- data.frame(names = colnames(players[, 6:16]))
+  col_names <- data.frame(categories = colnames(players[, 6:16]))
   sums <- data.frame(sums = colSums(players[, 6:16]))
   print(col_names)
   print(sums)
-  p_sums <- cbind(data.frame(names = col_names), sums)
+  p_sums <- cbind(data.frame(categories = col_names), sums)
   colnames(p_sums)
   return(p_sums)
 }
@@ -61,6 +61,17 @@ get_averages <- function(players) {
   }
   players[, 6:16] <- players[, 6:16] / players$Games
   return(players)
+}
+
+empty_list <- function(players) {
+  empty <- data.frame("categories" = c("MIN", 
+                       "FG%", "FT%", "3PM", "REB", "AST", 
+                       "STL", "BLK", "PTS", "TOV", "+/-"),
+                     "sums" = (rep(0, 11)))
+  rownames(empty) <- c("MIN", 
+                       "FG%", "FT%", "3PM", "REB", "AST", 
+                       "STL", "BLK", "PTS", "TOV", "+/-")
+  return(empty)
 }
 
 # Define server logic required to draw a histogram
@@ -91,13 +102,7 @@ shinyServer(function(input, output) {
     if (input$t_team != "All") {
       data_update <- filter(data_update, Team == input$t_team)
     }
-    if (input$t_mode == "Averages") {
-      for (i in 1:nrow(data_update)) {
-        for (j in 9:ncol(data_update)) {
-          data_update[i, j] <- round(data_update[i, j] / data_update[i, "Games"], 2)
-        }
-      }
-    }
+
     colnames(data_update) <- c("Name", "Team", "POS", "Rating", "GP", "MIN", 
                                "FG%", "FT%", "3PM", "REB", "AST", 
                                "STL", "BLK", "PTS", "TOV", "+/-")
@@ -111,13 +116,7 @@ shinyServer(function(input, output) {
     if (input$t_team != "All") {
       data_update <- filter(data_update, Team == input$t_team)
     }
-    if (input$t_mode == "Averages") {
-      for (i in 1:nrow(data_update)) {
-        for (j in 9:ncol(data_update)) {
-          data_update[i, j] <- round(data_update[i, j] / data_update[i, "Games"], 2)
-        }
-      }
-    }
+
     colnames(data_update) <- c("Name", "Team", "POS", "Rating", "GP", "MIN", 
                                "FG%", "FT%", "3PM", "REB", "AST", 
                                "STL", "BLK", "PTS", "TOV", "+/-")
@@ -136,9 +135,12 @@ shinyServer(function(input, output) {
       data_update <- filter(data_update, Team == input$t_team)
     }
     selected <- data_update[players, "Name"]
+    cat('Team 1\n\n')
     if (length(selected) > 0) {
-      cat('Team 1\n\nis trading these players to Team 2:\n\n')
+      cat('is trading these players to Team 2:\n\n')
       cat(selected, sep = '\n')
+    } else {
+      cat('Please select players\nfrom below to\ntrade to Team 2')
     }
   })
   
@@ -149,9 +151,12 @@ shinyServer(function(input, output) {
       data_update <- filter(data_update, Team == input$t_team)
     }
     selected <- data_update[players, "Name"]
+    cat('Team 2\n\n')
     if (length(selected) > 0) {
-      cat('Team 2\n\nis trading these players to Team 1:\n\n')
+      cat('is trading these players to Team 1:\n\n')
       cat(selected, sep = '\n')
+    } else {
+      cat('Please select players\nfrom below to\ntrade to Team 1')
     }
   })
   
@@ -165,21 +170,37 @@ shinyServer(function(input, output) {
     selected1 <- data_update[input$stats1_rows_selected,]
     selected2 <- data_update[input$stats2_rows_selected,]
     
-    if (nrow(selected1) == 0 | nrow(selected2) == 0) {
-      return()
+    if (nrow(selected1) == 0) {
+      trade1 <- empty_list()
+    } else {
+      averages1 <- get_averages(selected1)
+      trade1 <- calculate_trade(averages1)
+    }
+    if (nrow(selected2) == 0) {
+      trade2 <- empty_list()
+    } else {
+      averages2 <- get_averages(selected2)
+      trade2 <- calculate_trade(averages2)
     }
     
-    averages1 <- get_averages(selected1)
-    averages2 <- get_averages(selected2)
+    trade1$sums = trade1$sums - trade2$sums
     
-    trade1 <- calculate_trade(averages1)
-    trade2 <- calculate_trade(averages2)
-    trade <- trade1
-    trade$sums = trade1$sums - trade2$sums
-    View(trade1)
-    
-    g <- ggplot(data = trade, aes(x = names, weight = sums)) + geom_bar() + coord_flip()
+    trade <- rbind(trade1["PTS",],
+                   trade1["BLK",],
+                   trade1["STL",],
+                   trade1["AST",],
+                   trade1["REB",],
+                   trade1["3PM",],
+                   trade1["FG%",],
+                   trade1["FT%",],
+                   trade1["MIN",])
+    g <- ggplot(data = trade, aes(x = categories, weight = sums)) + geom_bar() + coord_flip() +
+           scale_x_discrete(limits=trade$categories)
     print(g)
+  })
+  
+  output$message <- renderText({
+    paste0("Each team is benefiting in the categories shown above after the current trade")
   })
   
   observeEvent(input$t_reset, {
