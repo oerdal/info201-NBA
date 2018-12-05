@@ -3,11 +3,13 @@
 # install.packages("dplyr")
 # install.packages("jsonlite")
 # install.packages("DT")
+# install.packages("ggplot2")
 library(shiny)
 library(httr)
 library(dplyr)
 library(jsonlite)
 library(DT)
+library(ggplot2)
 
 # reads in data
 url <- paste0("https://api.fantasydata.net/v3/nba/stats/JSON/PlayerSeasonStats/2019")
@@ -38,15 +40,39 @@ get_stats <- function(player) {
   }
 }
 
+calculate_trade <- function(players) {
+  colnames(players) <- c("Name", "Team", "POS", "Rating", "GP", "MIN", 
+                           "FG%", "FT%", "3PM", "REB", "AST", 
+                           "STL", "BLK", "PTS", "TOV", "+/-")
+  col_names <- data.frame(names = colnames(players[, 6:16]))
+  sums <- data.frame(sums = colSums(players[, 6:16]))
+  print(col_names)
+  print(sums)
+  p_sums <- cbind(data.frame(names = col_names), sums)
+  colnames(p_sums)
+  return(p_sums)
+}
+
+get_averages <- function(players) {
+  for (i in nrow(players)) {
+    if (players[i, "Games"] == 0) {
+      players[i, "Games"] <- 1
+    }
+  }
+  players[, 6:16] <- players[, 6:16] / players$Games
+  return(players)
+}
+
 # Define server logic required to draw a histogram
 shinyServer(function(input, output) {
+  selected1 <- reactiveValues(data = NULL)
   
   output$stats <- DT::renderDataTable({
-    data_update <- filter(data_nba, Position %in% input$position)
-    if (input$team != "All") {
-      data_update <- filter(data_update, Team == input$team)
+    data_update <- filter(data_nba, Position %in% input$d_position)
+    if (input$d_team != "All") {
+      data_update <- filter(data_update, Team == input$d_team)
     }
-    if (input$mode == "Averages") {
+    if (input$d_mode == "Averages") {
       for (i in 1:nrow(data_update)) {
         for (j in 9:ncol(data_update)) {
           data_update[i, j] <- round(data_update[i, j] / data_update[i, "Games"], 2)
@@ -60,20 +86,105 @@ shinyServer(function(input, output) {
                                               pageLength = 25))
   })
   
+  output$stats1 <- DT::renderDataTable({
+    data_update <- filter(data_nba, Position %in% input$t_position)
+    if (input$t_team != "All") {
+      data_update <- filter(data_update, Team == input$t_team)
+    }
+    if (input$t_mode == "Averages") {
+      for (i in 1:nrow(data_update)) {
+        for (j in 9:ncol(data_update)) {
+          data_update[i, j] <- round(data_update[i, j] / data_update[i, "Games"], 2)
+        }
+      }
+    }
+    colnames(data_update) <- c("Name", "Team", "POS", "Rating", "GP", "MIN", 
+                               "FG%", "FT%", "3PM", "REB", "AST", 
+                               "STL", "BLK", "PTS", "TOV", "+/-")
+    data_update <- data_update %>% select(Name, Team, POS, Rating)
+    DT::datatable(data_update, options = list(lengthMenu = c(25, 50, 75, 100), 
+                                              pageLength = 25))
+  })
+  
+  output$stats2 <- DT::renderDataTable({
+    data_update <- filter(data_nba, Position %in% input$t_position)
+    if (input$t_team != "All") {
+      data_update <- filter(data_update, Team == input$t_team)
+    }
+    if (input$t_mode == "Averages") {
+      for (i in 1:nrow(data_update)) {
+        for (j in 9:ncol(data_update)) {
+          data_update[i, j] <- round(data_update[i, j] / data_update[i, "Games"], 2)
+        }
+      }
+    }
+    colnames(data_update) <- c("Name", "Team", "POS", "Rating", "GP", "MIN", 
+                               "FG%", "FT%", "3PM", "REB", "AST", 
+                               "STL", "BLK", "PTS", "TOV", "+/-")
+    data_update <- data_update %>% select(Name, Team, POS, Rating)
+    DT::datatable(data_update, options = list(lengthMenu = c(25, 50, 75, 100), 
+                                              pageLength = 25))
+  })
+  
+  stats1 <- dataTableProxy("stats1")
+  stats2 <- dataTableProxy("stats2")
+  
   output$team1 <- renderPrint({
-    players <- input$stats_rows_selected
-    if (length(players)) {
-      cat('Team 1\n\nThese players are selected for trading:\n\n')
-      cat(players, sep = '\n')
+    players <- input$stats1_rows_selected
+    data_update <- filter(data_nba, Position %in% input$t_position)
+    if (input$t_team != "All") {
+      data_update <- filter(data_update, Team == input$t_team)
+    }
+    selected <- data_update[players, "Name"]
+    if (length(selected) > 0) {
+      cat('Team 1\n\nis trading these players to Team 2:\n\n')
+      cat(selected, sep = '\n')
     }
   })
   
   output$team2 <- renderPrint({
-    players <- input$stats_rows_selected
-    if (length(players)) {
-      cat('Team 2\n\nThese players are selected for trading:\n\n')
-      cat(players, sep = '\n')
+    players <- input$stats2_rows_selected
+    data_update <- filter(data_nba, Position %in% input$t_position)
+    if (input$t_team != "All") {
+      data_update <- filter(data_update, Team == input$t_team)
     }
+    selected <- data_update[players, "Name"]
+    if (length(selected) > 0) {
+      cat('Team 2\n\nis trading these players to Team 1:\n\n')
+      cat(selected, sep = '\n')
+    }
+  })
+  
+  output$trade_plot <- renderPlot({
+    players <- input$stats1_rows_selected
+    data_update <- filter(data_nba, Position %in% input$t_position)
+    if (input$t_team != "All") {
+      data_update <- filter(data_update, Team == input$t_team)
+    }
+    
+    selected1 <- data_update[input$stats1_rows_selected,]
+    selected2 <- data_update[input$stats2_rows_selected,]
+    
+    if (nrow(selected1) == 0 | nrow(selected2) == 0) {
+      return()
+    }
+    
+    averages1 <- get_averages(selected1)
+    averages2 <- get_averages(selected2)
+    
+    trade1 <- calculate_trade(averages1)
+    trade2 <- calculate_trade(averages2)
+    trade <- trade1
+    trade$sums = trade1$sums - trade2$sums
+    View(trade1)
+    
+    g <- ggplot(data = trade, aes(x = names, weight = sums)) + geom_bar() + coord_flip()
+    print(g)
+  })
+  
+  observeEvent(input$t_reset, {
+    stats1 %>% selectRows(NULL)
+    stats2 %>% selectRows(NULL)
   })
   
 })

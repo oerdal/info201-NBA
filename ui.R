@@ -20,55 +20,93 @@ data <- fromJSON(body)
 # Define UI for application that draws a histogram
 shinyUI(fluidPage(
 
-  tags$head(
-    tags$style(
-      ".title {text-align: center}"
+  navbarPage("ACBois5",
+             
+    tabPanel("Player Roster",
+       tags$head(
+         tags$style(
+           ".title {text-align: center}"
+         )
+       ),
+       tags$div(class = "title", titlePanel("Fantasy Basketball Trading Comparison Tool")),
+       hr(),
+       
+       fluidRow(
+         column(3, radioButtons(
+           inputId = "d_mode",
+           label = "Mode:",
+           choices = list("Totals", "Averages"), 
+           inline = TRUE
+         )),
+         column(3, selectInput(
+           inputId = "d_team", 
+           label = "Team:", 
+           choices = unique(c("All", data$Team))
+         ), offset = 1),
+         column(3, checkboxGroupInput(
+           inputId = "d_position", 
+           label = "Positions:", 
+           choices = unique(c(data$Position)), 
+           selected = unique(c(data$Position)),
+           inline = TRUE
+         ), offset = 1)
+       ),
+       
+       hr(),
+       # plot for trading comparison
+       fluidRow(
+         column(12, DT::dataTableOutput("stats"))
+       )
+    ),
+    
+    tabPanel("Trade Comparison",
+      tags$head(
+       tags$style(
+         ".title {text-align: center}"
+       )
+      ),
+      tags$div(class = "title", titlePanel("Fantasy Basketball Trading Comparison Tool")),
+      hr(),
+      
+      fluidRow(
+       column(3, radioButtons(
+         inputId = "t_mode",
+         label = "Mode:",
+         choices = list("Totals", "Averages"), 
+         inline = TRUE
+       )),
+       column(3, selectInput(
+         inputId = "t_team", 
+         label = "Team:", 
+         choices = unique(c("All", data$Team))
+       )),
+       column(3, checkboxGroupInput(
+         inputId = "t_position", 
+         label = "Positions:", 
+         choices = unique(c(data$Position)), 
+         selected = unique(c(data$Position)),
+         inline = TRUE
+       )),
+       column(2, actionButton(
+         inputId = "t_reset",
+         label = "Reset"
+       ), offset = 1)
+      ),
+      
+      hr(),
+      # shows players user clicked for trading comparison
+      fluidRow(
+       column(3, verbatimTextOutput("team1")),
+       column(6, plotOutput("trade_plot")),
+       column(3, verbatimTextOutput("team2"))
+      ),
+      
+      hr(),
+      # plot for trading comparison             
+      fluidRow(
+       column(6, DT::dataTableOutput("stats1")),
+       column(6, DT::dataTableOutput("stats2"))
+      )
     )
-  ),
-  tags$div(class = "title", titlePanel("Fantasy Basketball Trading Comparison Tool")),
-  hr(),
-  
-  fluidRow(
-    column(3, radioButtons(
-      inputId = "mode",
-      label = "Mode:",
-      choices = list("Totals", "Averages"), 
-      inline = TRUE
-    )),
-    column(2, selectInput(
-      inputId = "team", 
-      label = "Team:", 
-      choices = unique(c("All", data$Team))
-    )),
-    column(4, checkboxGroupInput(
-      inputId = "position", 
-      label = "Positions:", 
-      choices = unique(c(data$Position)), 
-      selected = unique(c(data$Position)),
-      inline = TRUE
-    )),
-    column(1, actionButton(
-      inputId = "trade",
-      label = "Trade", 
-      icon("basketball-ball")
-    )),
-    column(1, actionButton(
-      inputId = "reset",
-      label = "Reset"
-    ))
-  ),
-  
-  hr(),
-  # shows players user clicked for trading comparison
-  fluidRow(
-    column(6, verbatimTextOutput("team1")),
-    column(6, verbatimTextOutput("team2"))
-  ),
-  
-  hr(),
-  # plot for trading comparison
-  fluidRow(
-    column(12, DT::dataTableOutput("stats"))
   )
-  
 ))
