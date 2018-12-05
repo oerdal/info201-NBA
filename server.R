@@ -47,8 +47,6 @@ calculate_trade <- function(players) {
                          "STL", "BLK", "PTS", "TOV", "+/-")
   col_names <- data.frame(categories = colnames(players[, 6:16]))
   sums <- data.frame(sums = colSums(players[, 6:16]))
-  print(col_names)
-  print(sums)
   p_sums <- cbind(data.frame(categories = col_names), sums)
   colnames(p_sums)
   return(p_sums)
