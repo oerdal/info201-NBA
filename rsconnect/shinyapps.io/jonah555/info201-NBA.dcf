@@ -5,8 +5,8 @@ account: jonah555
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 602687
-bundleId: 1742532
+bundleId: 1742569
 url: https://jonah555.shinyapps.io/info201-NBA/
-when: 1544017818.67852
+when: 1544018929.61431
 asMultiple: FALSE
 asStatic: FALSE

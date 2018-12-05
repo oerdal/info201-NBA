@@ -32,25 +32,25 @@ shinyUI(fluidPage(
        hr(),
        
        fluidRow(
-         column(3, radioButtons(
+         column(4, selectInput(
+           inputId = "d_team", 
+           label = "Team:", 
+           choices = unique(c("All", data$Team))
+         ), align = "center"),
+         column(4, radioButtons(
            inputId = "d_mode",
            label = "Mode:",
            choices = list("Totals", "Averages"),
            selected = "Averages", 
            inline = TRUE
-         )),
-         column(3, selectInput(
-           inputId = "d_team", 
-           label = "Team:", 
-           choices = unique(c("All", data$Team))
-         ), offset = 1),
-         column(3, checkboxGroupInput(
+         ), align = "center"),
+         column(4, checkboxGroupInput(
            inputId = "d_position", 
            label = "Positions:", 
            choices = unique(c(data$Position)), 
            selected = unique(c(data$Position)),
            inline = TRUE
-         ), offset = 1)
+         ), align = "center")
        ),
        
        hr(),
