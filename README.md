@@ -2,4 +2,4 @@
 
 ### Shiny Deployment
 
-Project currently [live](https://oerdal.shinyapps.io/final/)
+Project currently live on [>> shinyapps.io <<](https://oerdal.shinyapps.io/final/)
