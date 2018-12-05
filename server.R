@@ -11,7 +11,7 @@ library(jsonlite)
 library(DT)
 library(ggplot2)
 
-# reads in data
+# reads in data from the api key.
 url <- paste0("https://api.fantasydata.net/v3/nba/stats/JSON/PlayerSeasonStats/2019")
 response <- GET(url, add_headers("Host" = "api.fantasydata.net",
                                  "Ocp-Apim-Subscription-Key" = "ddc32a9a9ec54d5a87e5d0d44a36fd20"))
@@ -40,6 +40,7 @@ get_stats <- function(player) {
   }
 }
 
+# Calculates the player's trade.
 calculate_trade <- function(players) {
   colnames(players) <- c("Name", "Team", "POS", "Rating", "GP", "MIN", 
                          "FG%", "FT%", "3PM", "REB", "AST", 
@@ -53,6 +54,7 @@ calculate_trade <- function(players) {
   return(p_sums)
 }
 
+# Calculates the averages of the players.
 get_averages <- function(players) {
   for (i in nrow(players)) {
     if (players[i, "Games"] == 0) {
@@ -62,6 +64,7 @@ get_averages <- function(players) {
   players[, 6:16] <- players[, 6:16] / players$Games
   return(players)
 }
+
 
 empty_list <- function(players) {
   empty <- data.frame("categories" = c("MIN", 
@@ -178,8 +181,8 @@ shinyServer(function(input, output) {
                    trade1["FG%",],
                    trade1["FT%",])
     trade["TOV", "sums"] <- -1 * trade["TOV", "sums"]
-    g <- ggplot(data = trade, aes(x = categories, weight = sums)) + geom_bar() + coord_flip() +
-      scale_x_discrete(limits=trade$categories)
+    g <- ggplot(data = trade, aes(x = categories, y = sums)) + geom_bar(stat = "identity", fill = "steelblue") + coord_flip() + 
+      geom_text(aes(label = abs(round(sums, digits = 2))), vjust = 1.2, hjust = 1, color = "black", size = 3.5) + scale_x_discrete(limits=trade$categories)
     print(g)
   })
   

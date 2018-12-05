@@ -3,12 +3,15 @@
 # install.packages("dplyr")
 # install.packages("jsonlite")
 # install.packages("DT")
+# install.packages("eeptools")
+# install.packages("shinythemes")
 library(shiny)
 library(httr)
 library(dplyr)
 library(jsonlite)
 library(DT)
 library(eeptools)
+library(shinythemes)
 
 # reads in data
 url <- paste0("https://api.fantasydata.net/v3/nba/stats/JSON/PlayerSeasonStats/2019")
@@ -18,7 +21,7 @@ body <- content(response, "text")
 data <- fromJSON(body)
 
 # Define UI for application that draws a histogram
-shinyUI(fluidPage(
+shinyUI(fluidPage(theme = shinytheme("flatly"),
 
   navbarPage("Fantasy Basketball",
              
