@@ -2,4 +2,4 @@
 
 ### Shiny Deployment
 
-Project currently live on [>> shinyapps.io <<](https://oerdal.shinyapps.io/final/)
+Project currently live on [>> shinyapps.io <<](https://jonah555.shinyapps.io/info201-NBA/)
