@@ -176,7 +176,6 @@ shinyServer(function(input, output) {
     trade2 <- calculate_trade(averages2)
     trade <- trade1
     trade$sums = trade1$sums - trade2$sums
-    View(trade1)
     
     g <- ggplot(data = trade, aes(x = names, weight = sums)) + geom_bar() + coord_flip()
     print(g)
