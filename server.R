@@ -42,8 +42,8 @@ get_stats <- function(player) {
 
 calculate_trade <- function(players) {
   colnames(players) <- c("Name", "Team", "POS", "Rating", "GP", "MIN", 
-                           "FG%", "FT%", "3PM", "REB", "AST", 
-                           "STL", "BLK", "PTS", "TOV", "+/-")
+                         "FG%", "FT%", "3PM", "REB", "AST", 
+                         "STL", "BLK", "PTS", "TOV", "+/-")
   col_names <- data.frame(categories = colnames(players[, 6:16]))
   sums <- data.frame(sums = colSums(players[, 6:16]))
   print(col_names)
@@ -65,9 +65,9 @@ get_averages <- function(players) {
 
 empty_list <- function(players) {
   empty <- data.frame("categories" = c("MIN", 
-                       "FG%", "FT%", "3PM", "REB", "AST", 
-                       "STL", "BLK", "PTS", "TOV", "+/-"),
-                     "sums" = (rep(0, 11)))
+                                       "FG%", "FT%", "3PM", "REB", "AST", 
+                                       "STL", "BLK", "PTS", "TOV", "+/-"),
+                      "sums" = (rep(0, 11)))
   rownames(empty) <- c("MIN", 
                        "FG%", "FT%", "3PM", "REB", "AST", 
                        "STL", "BLK", "PTS", "TOV", "+/-")
@@ -102,7 +102,7 @@ shinyServer(function(input, output) {
     if (input$t_team != "All") {
       data_update <- filter(data_update, Team == input$t_team)
     }
-
+    
     colnames(data_update) <- c("Name", "Team", "POS", "Rating", "GP", "MIN", 
                                "FG%", "FT%", "3PM", "REB", "AST", 
                                "STL", "BLK", "PTS", "TOV", "+/-")
@@ -116,7 +116,7 @@ shinyServer(function(input, output) {
     if (input$t_team != "All") {
       data_update <- filter(data_update, Team == input$t_team)
     }
-
+    
     colnames(data_update) <- c("Name", "Team", "POS", "Rating", "GP", "MIN", 
                                "FG%", "FT%", "3PM", "REB", "AST", 
                                "STL", "BLK", "PTS", "TOV", "+/-")
@@ -195,7 +195,7 @@ shinyServer(function(input, output) {
                    trade1["FT%",],
                    trade1["MIN",])
     g <- ggplot(data = trade, aes(x = categories, weight = sums)) + geom_bar() + coord_flip() +
-           scale_x_discrete(limits=trade$categories)
+      scale_x_discrete(limits=trade$categories)
     print(g)
   })
   

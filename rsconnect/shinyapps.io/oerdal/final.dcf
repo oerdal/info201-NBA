@@ -1,0 +1,12 @@
+name: final
+title: final
+username:
+account: oerdal
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 604739
+bundleId: 1742173
+url: https://oerdal.shinyapps.io/final/
+when: 1544006730.20183
+asMultiple: FALSE
+asStatic: FALSE
