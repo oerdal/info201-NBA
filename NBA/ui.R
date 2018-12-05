@@ -9,6 +9,7 @@ library(httr)
 library(dplyr)
 library(jsonlite)
 library(DT)
+library(eeptools)
 
 url <- paste0("https://api.fantasydata.net/v3/nba/stats/JSON/PlayerSeasonStats/2019")
 response <- GET(url, add_headers("Host" = "api.fantasydata.net",
