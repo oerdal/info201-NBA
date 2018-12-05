@@ -168,15 +168,16 @@ shinyServer(function(input, output) {
     
     trade1$sums = trade1$sums - trade2$sums
     
-    trade <- rbind(trade1["PTS",],
+    trade <- rbind(trade1["TOV",],
+                   trade1["PTS",],
                    trade1["BLK",],
                    trade1["STL",],
                    trade1["AST",],
                    trade1["REB",],
                    trade1["3PM",],
                    trade1["FG%",],
-                   trade1["FT%",],
-                   trade1["MIN",])
+                   trade1["FT%",])
+    trade["TOV", "sums"] <- -1 * trade["TOV", "sums"]
     g <- ggplot(data = trade, aes(x = categories, weight = sums)) + geom_bar() + coord_flip() +
       scale_x_discrete(limits=trade$categories)
     print(g)
