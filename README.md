@@ -1,10 +1,7 @@
-# Final Project
-
-### Shiny Deployment
+# Fantasy Basketball Roster & Trade Comparison Tool
 
 Project currently live on [>> shinyapps.io <<](https://jonah555.shinyapps.io/info201-NBA/)
 
-# Fantasy Basketball Roster 
 ### Executive Summary 
 Our group are working with an app associated with NBA, which is the most attractive basketball League in America. We made this app because we really care and love the NBA. And we want to make usage of mass statistics to visualize NBA market for NBA fans.  For this project, we make a shiny app that will display stats and prediction future stats of NBA players. 
 
@@ -16,4 +13,4 @@ The number before player name is their jersey number. Team stands for the NBA te
 
 
 #### Second Tab: TRADE COMPARISON 
-In second tab, we made a tool called Trading Comparison Tool in which we can simulate trade of players in NBA and to see the benefits for each team in the categories shown after current trade. There are two columns on each side stands for two teams that would trade players from each other. The chart in the middle show the benefiting result of trade in the form of bar pattern which stand for the comparison difference in each category. When bar in a specific category goes towards positive, it means Team 2 will benefit in this category. Otherwise, it will benefit Team 1.  There are two player rosters below the chart in which we can choose traded player from. Same as first tab, the trading tool also allow people to adjust amount of entries and search for specific player by name. 
+In second tab, we made a tool called Trading Comparison Tool in which we can simulate trade of players in NBA and to see the benefits for each team in the categories shown after current trade. There are two columns on each side stands for two teams that would trade players from each other. The chart in the middle show the benefiting result of trade in the form of bar pattern which stand for the comparison difference in each category. When bar in a specific category goes towards positive, it means Team 2 will benefit in this category. Otherwise, it will benefit Team 1.  There are two player rosters below the chart in which we can choose traded player from. Same as first tab, the trading tool also allow people to adjust amount of entries and search for specific player by name.
