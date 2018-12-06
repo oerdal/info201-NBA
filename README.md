@@ -2,11 +2,11 @@
 
 ### Shiny Deployment
 
-Project currently live on [>> shinyapps.io <<](https://jonah555.shinyapps.io/info201-NBA/)
+Project currently live on [>> shinyapps.io <<](https://oerdal.shinyapps.io/final/)
 
 ## Fantasy Basketball
 ## Executive Summary
- Our group are working with an app associated with NBA, which is the most attractive basketball League in America. We all love to play fantasy basketball against each other but we wanted a tool that would help show us if trades for the players will be in our favor or stats that we need to improve our team in general. We made this app because we really care and love the NBA and we want to make usage of mass statistics to visualize NBA market for NBA fans. For this project, we make a shiny app that will display stats and prediction future stats of NBA players. 
+ Our group are working with an app associated with NBA, which is the most attractive basketball League in America. We all love to play fantasy basketball against each other but we wanted a tool that would help show us if trades for the players will be in our favor or stats that we need to improve our team in general. We made this app because we really care and love the NBA and we want to make usage of mass statistics to visualize NBA market for NBA fans. For this project, we make a shiny app that will display stats and prediction future stats of NBA players.
 
 ## Detail
 ## First Tab: PLAYER ROSTER
