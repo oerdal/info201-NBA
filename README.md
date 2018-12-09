@@ -1,6 +1,6 @@
 # Fantasy Basketball Roster & Trade Comparison Tool
 
-Project currently live on [>> shinyapps.io <<](https://oerdal.shinyapps.io/final//)
+Project currently live on [>> shinyapps.io <<](https://jonah555.shinyapps.io/info201-NBA/)
 
 ## Executive Summary
 Our group are working with an app associated with NBA, which is the most attractive basketball League in America. We made this app because we really care and love the NBA. And we want to make usage of mass statistics to visualize NBA market for NBA fans.  For this project, we make a shiny app that will display stats and prediction future stats of NBA players.
